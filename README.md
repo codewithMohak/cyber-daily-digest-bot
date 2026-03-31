@@ -1,148 +1,271 @@
 # 🧠 Cyber Daily Digest Bot
 
-A Python-based cybersecurity digest bot that fetches the latest cyber updates from RSS feeds, summarizes them using the Groq API, and sends a clean daily briefing to Telegram.
+> A Python-based cybersecurity bot that fetches the latest updates from trusted RSS feeds, summarizes them using the Groq API, and delivers a clean daily digest to Telegram every morning.
+
+---
+
+## ✨ Overview
+
+Cybersecurity moves fast. Blogs, CVEs, write-ups, advisories, and research posts pile up every day.
+
+This project solves that problem by turning scattered updates into a **short, readable morning briefing**.
+
+With this bot, you can:
+
+* stay updated without doom-scrolling
+* read the latest cyber news in **5 minutes**
+* automate your daily learning workflow
+* build consistency as a student, SOC analyst, or bug bounty learner
+
+---
 
 ## 🚀 Features
-- Pulls the latest cybersecurity news from RSS feeds
-- Filters only fresh posts from the last 24 hours
-- Avoids duplicate articles using seen link tracking
-- Summarizes each item with Groq LLM
-- Sends a clean digest directly to Telegram
-- Can run automatically every morning using cron / Task Scheduler
+
+* 📰 Pulls the latest cybersecurity updates from RSS feeds
+* ⏱️ Filters only **fresh posts from the last 24 hours**
+* ♻️ Avoids duplicate articles using seen-link tracking
+* 🧠 Summarizes each item using **Groq LLM**
+* 📩 Sends a clean daily digest directly to **Telegram**
+* ⚙️ Supports **automatic daily execution**
+
+  * `cron` for Linux / WSL / Kali / Parrot
+  * `Task Scheduler` for Windows
+
+---
 
 ## 🛠️ Tech Stack
-- Python
-- feedparser
-- requests
-- python-dotenv
-- python-dateutil
-- Groq API
-- Telegram Bot API
+
+| Category              | Tools            |
+| --------------------- | ---------------- |
+| Language              | Python           |
+| Parsing               | feedparser       |
+| HTTP Requests         | requests         |
+| Environment Variables | python-dotenv    |
+| Date Handling         | python-dateutil  |
+| AI Summarization      | Groq API         |
+| Delivery              | Telegram Bot API |
+
+---
 
 ## 📡 Sources Used
-- PortSwigger Research
-- Google Project Zero
-- The Hacker News
-- Snyk Blog
-- CISA Alerts
-- Bugcrowd Blog
-- Intigriti Blog
-- NVD CVE Feed
+
+This bot currently tracks updates from:
+
+* PortSwigger Research
+* Google Project Zero
+* The Hacker News
+* Snyk Blog
+* CISA Alerts
+* Bugcrowd Blog
+* Intigriti Blog
+* NVD CVE Feed
+
+> You can easily customize the source list inside `config.py`.
+
+---
 
 ## 📂 Project Structure
+
 ```bash
-main.py              # Main workflow
-feeds.py             # RSS fetching
-filters.py           # Freshness + duplicate filtering
-summarizer.py        # Groq API summarization
-formatter.py         # Digest formatting
-telegram_sender.py   # Telegram delivery
-config.py            # Config and feeds
-seen_links.json      # Stores already sent links
-````
+cyber-daily-digest-bot/
+│
+├── main.py              # Main workflow
+├── feeds.py             # RSS feed fetching
+├── filters.py           # Freshness + duplicate filtering
+├── summarizer.py        # Groq API summarization
+├── formatter.py         # Digest formatting
+├── telegram_sender.py   # Telegram delivery
+├── config.py            # Config + RSS feed definitions
+├── seen_links.json      # Stores already sent links
+├── requirements.txt     # Python dependencies
+├── .env.example         # Example environment variables
+├── .gitignore           # Ignore secrets and cache files
+└── README.md            # Project documentation
+```
 
-⚙️ Setup
-1. Clone the Repository
-``git clone https://github.com/yourusername/cyber-daily-digest-bot.git``
-``cd cyber-daily-digest-bot``
-2. Install Dependencies
-``pip install -r requirements.txt``
-3. Add Environment Variables
+---
 
-Create a .env file in the project root:
+## ⚙️ Setup
 
-``GROQ_API_KEY=your_groq_api_key_here
+### 1) Clone the Repository
+
+```bash
+git clone https://github.com/yourusername/cyber-daily-digest-bot.git
+cd cyber-daily-digest-bot
+```
+
+### 2) Install Dependencies
+
+```bash
+pip install -r requirements.txt
+```
+
+### 3) Add Environment Variables
+
+Create a `.env` file in the project root:
+
+```env
+GROQ_API_KEY=your_groq_api_key_here
 TELEGRAM_BOT_TOKEN=your_telegram_bot_token_here
 TELEGRAM_CHAT_ID=your_telegram_chat_id_here
-MAX_ITEMS=5``
+MAX_ITEMS=5
+```
 
-4. Run the Bot
-``python main.py``
+### 4) Run the Bot
 
-If everything is configured correctly, the bot will:
+```bash
+python main.py
+```
 
-Fetch fresh cybersecurity updates
-Summarize them using Groq
-Send a daily digest to Telegram
-⏰ Automation
+If configured correctly, the bot will:
 
-You can schedule this bot to run automatically every morning.
+* fetch fresh cybersecurity updates
+* summarize them using Groq
+* send a clean digest to Telegram
 
-🐧 Linux / WSL / Kali / Parrot — Using cron
+---
+
+## ⏰ Automation
+
+Once tested manually, you can schedule the bot to run automatically every morning.
+
+---
+
+### 🐧 Linux / WSL / Kali / Parrot — Using `cron`
+
 Open your crontab:
-``crontab -e``
+
+```bash
+crontab -e
+```
+
 Add this line:
-``0 7 * * * /usr/bin/python3 /full/path/to/cyber-daily-digest-bot/main.py >> /full/path/to/cyber-daily-digest-bot/digest.log 2>&1``
-Example:
-``0 7 * * * /usr/bin/python3 /home/mohak/cyber-daily-digest-bot/main.py >> /home/mohak/cyber-daily-digest-bot/digest.log 2>&1``
-What this does:
-Runs the bot every day at 7:00 AM
-Saves logs to digest.log
 
-🪟 Windows — Using Task Scheduler
-Steps to schedule the bot daily:
-1. Open Task Scheduler
-``Press Windows Key``
-Search for Task Scheduler
-``Open it``
-2. Click Create Basic Task
+```bash
+0 7 * * * /usr/bin/python3 /full/path/to/cyber-daily-digest-bot/main.py >> /full/path/to/cyber-daily-digest-bot/digest.log 2>&1
+```
 
-Set:
+#### Example
 
-Name: Cyber Daily Digest Bot
-Description: Runs the cybersecurity digest bot every morning
-3. Choose Trigger
+```bash
+0 7 * * * /usr/bin/python3 /home/mohak/cyber-daily-digest-bot/main.py >> /home/mohak/cyber-daily-digest-bot/digest.log 2>&1
+```
 
-Select:
+**What this does:**
 
-Daily
+* Runs the bot **every day at 7:00 AM**
+* Saves logs to `digest.log`
 
-Then set the time:
+---
 
-7:00 AM
-4. Choose Action
+### 🪟 Windows — Using Task Scheduler
 
-Select:
+1. Open **Task Scheduler**
+2. Click **Create Basic Task**
+3. Set:
 
-Start a Program
-5. Program / Script
+   * **Name:** `Cyber Daily Digest Bot`
+   * **Trigger:** `Daily`
+   * **Time:** `7:00 AM`
+4. Choose **Start a Program**
 
-Enter:
+#### Program / Script
 
+```bash
 python
+```
 
-If Python is not recognized, use the full Python path, for example:
-``C:\Users\YourName\AppData\Local\Programs\Python\Python312\python.exe``
+> If Python is not recognized, use the full Python path:
 
-6. Add Arguments
-Enter the full path to your main.py file:
-``C:\Users\YourName\Desktop\cyber-daily-digest-bot\main.py``
+```bash
+C:\Users\YourName\AppData\Local\Programs\Python\Python312\python.exe
+```
 
-7. Start In (Optional but Recommended)
-Enter the project folder path:
-``C:\Users\YourName\Desktop\cyber-daily-digest-bot``
+#### Add Arguments
 
-9. Finish
+```bash
+C:\Users\YourName\Desktop\cyber-daily-digest-bot\main.py
+```
 
-Click Finish
+#### Start In
 
-Your bot will now run automatically every day at 7:00 AM.
+```bash
+C:\Users\YourName\Desktop\cyber-daily-digest-bot
+```
 
-📌 Why I Built This
+After setup, the bot will run **automatically every day at 7:00 AM**.
 
-Cybersecurity moves fast, and keeping up manually can become overwhelming.
-This project was built to solve a simple problem:
-How can I stay up to date every day without spending hours scrolling through blogs, CVEs, and write-ups?
-This bot turns scattered security updates into a short, readable daily briefing.
-It is designed to make learning more consistent, practical, and efficient.
-🔮 Future Improvements
+---
+
+## 📌 Why I Built This
+
+One of the biggest problems in cybersecurity is **information overload**.
+
+There is too much happening every day:
+
+* new CVEs
+* new research write-ups
+* new bug bounty techniques
+* new threat reports
+
+Instead of manually checking everything, I wanted a simple system that gives me a **5-minute cyber briefing every morning**.
+
+This project was built to make learning:
+
+* more consistent
+* more practical
+* more efficient
+
+---
+
+## 🔮 Future Improvements
 
 Planned upgrades for future versions:
 
-Prioritize high-value / critical CVEs
-Add category-based sections (Web, CVEs, Threat Intel, Research)
-Save digest to Markdown / Notion / Obsidian
-Add a simple web dashboard
-Better ranking of important stories
-Keyword-based filtering
-SQLite database instead of JSON tracking
+* Prioritize **high-value / critical CVEs**
+* Add category-based sections:
+
+  * Web
+  * CVEs
+  * Threat Intel
+  * Research
+* Save digest to **Markdown / Notion / Obsidian**
+* Add a simple **web dashboard**
+* Improve ranking of important stories
+* Add keyword-based filtering
+* Replace JSON tracking with **SQLite**
+
+---
+
+## 🧪 Example Use Case
+
+### Every Morning at 7:00 AM:
+
+* the bot fetches the latest cyber updates
+* filters only fresh unseen entries
+* summarizes them using AI
+* sends a Telegram digest
+
+☕ Result: you read your daily cyber briefing in under **5 minutes**.
+
+---
+
+## 🤝 Contributing
+
+Suggestions, improvements, and custom source ideas are always welcome.
+
+If you want to improve the bot, feel free to fork the project and experiment.
+
+---
+
+## 📜 License
+
+This project is open-source and available under the **MIT License**.
+
+---
+
+## ⭐ If You Found This Useful
+
+If you like the project, consider giving it a **star** on GitHub.
+
+It helps more people discover it and motivates future improvements 🚀
